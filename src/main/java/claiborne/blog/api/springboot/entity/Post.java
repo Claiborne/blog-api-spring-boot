@@ -19,7 +19,7 @@ public class Post {
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   private Long id;
 
-  @Column(name = "title", nullable = false) // by default name is name of variable
+  @Column(name = "title", nullable = false) // by default name would be the name of variable
   private String title;
 
   @Column(name = "description", nullable = false)
