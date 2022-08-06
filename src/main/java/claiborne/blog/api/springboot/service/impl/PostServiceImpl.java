@@ -6,6 +6,9 @@ import claiborne.blog.api.springboot.repository.PostRepository;
 import claiborne.blog.api.springboot.service.PostService;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+import java.util.stream.Collectors;
+
 @Service
 public class PostServiceImpl implements PostService {
 
@@ -21,22 +24,40 @@ public class PostServiceImpl implements PostService {
   @Override
   public PostDto create(PostDto postDto) {
 
-    // convert DTO to entity
-    Post post = new Post();
-    post.setTitle(postDto.getTitle());
-    post.setDescription(postDto.getDescription());
-    post.setContent((postDto.getContent()));
+    // convert DTO to Entity
+    Post post = dtoToEntity(postDto);
 
     // returns Post entity
     Post newPost = postRepository.save(post);
 
-    // convert entity to DTO
-    PostDto postResponse = new PostDto();
-    postResponse.setId(newPost.getId());
-    postResponse.setTitle(newPost.getTitle());
-    postResponse.setDescription(newPost.getDescription());
-    postResponse.setContent(newPost.getContent());
+    // convert Entity to DTO
+    return entityToDTO(newPost);
+  }
 
-    return postResponse;
+  @Override
+  public List<PostDto> getAll() {
+    List<Post> posts = postRepository.findAll();
+    return posts.stream().map(post -> entityToDTO(post)).collect(Collectors.toList());
+  }
+
+  // convert Entity to DTO
+  private PostDto entityToDTO(Post entity) {
+    PostDto dto = new PostDto();
+    dto.setId(entity.getId());
+    dto.setTitle(entity.getTitle());
+    dto.setDescription(entity.getDescription());
+    dto.setContent(entity.getContent());
+
+    return dto;
+  }
+
+  // convert DTO to Entity
+  private Post dtoToEntity(PostDto dto) {
+    Post entity = new Post();
+    entity.setTitle(dto.getTitle());
+    entity.setDescription(dto.getDescription());
+    entity.setContent((dto.getContent()));
+
+    return entity;
   }
 }

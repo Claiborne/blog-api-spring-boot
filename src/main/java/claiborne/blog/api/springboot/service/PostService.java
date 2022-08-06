@@ -6,4 +6,5 @@ public interface PostService {
 
   PostDto create(PostDto postDto);
 
+  List<PostDto> getAll();
 }
