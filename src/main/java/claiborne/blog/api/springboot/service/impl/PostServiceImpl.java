@@ -1,12 +1,14 @@
 package claiborne.blog.api.springboot.service.impl;
 
 import claiborne.blog.api.springboot.entity.Post;
+import claiborne.blog.api.springboot.exception.ResourceNotFoundException;
 import claiborne.blog.api.springboot.payload.PostDto;
 import claiborne.blog.api.springboot.repository.PostRepository;
 import claiborne.blog.api.springboot.service.PostService;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -38,6 +40,12 @@ public class PostServiceImpl implements PostService {
   public List<PostDto> getAll() {
     List<Post> posts = postRepository.findAll();
     return posts.stream().map(post -> entityToDTO(post)).collect(Collectors.toList());
+  }
+
+  @Override
+  public PostDto getById(long id) {
+    Post entity = postRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Post", "id", id));
+    return entityToDTO(entity);
   }
 
   // convert Entity to DTO
