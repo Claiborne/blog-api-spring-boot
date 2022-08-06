@@ -1,0 +1,29 @@
+package claiborne.blog.api.springboot.controller;
+
+import claiborne.blog.api.springboot.payload.PostDto;
+import claiborne.blog.api.springboot.service.PostService;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+
+@RestController
+@RequestMapping("/api/posts")
+public class PostController {
+
+  // note: interface not implementation class for loose coupling
+  private PostService postService;
+
+  // ok to omit @Autowired b/c this class is registered as a bean and has only one constructor
+  public PostController(PostService postService) {
+    this.postService = postService;
+  }
+
+  // @PostMapping impl has: @RequestMapping(method=RequestMethod.POST)
+  @PostMapping
+  public ResponseEntity<PostDto> createPost(@RequestBody PostDto postDto) {
+    return new ResponseEntity<>(postService.create(postDto), HttpStatus.CREATED);
+  }
+}
