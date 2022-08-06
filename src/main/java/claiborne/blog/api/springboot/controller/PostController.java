@@ -35,4 +35,9 @@ public class PostController {
   public ResponseEntity<PostDto> getById(@PathVariable(name = "id") long id) {
     return ResponseEntity.ok(postService.getById(id));
   }
+
+  @PutMapping("/{id}")
+  public ResponseEntity<PostDto> update(@RequestBody PostDto dto, @PathVariable(name = "id") long id) {
+    return new ResponseEntity<>(postService.update(dto, id), HttpStatus.OK); // likely wrong returning OK
+  }
 }
