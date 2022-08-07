@@ -5,6 +5,9 @@ import claiborne.blog.api.springboot.exception.ResourceNotFoundException;
 import claiborne.blog.api.springboot.payload.PostDto;
 import claiborne.blog.api.springboot.repository.PostRepository;
 import claiborne.blog.api.springboot.service.PostService;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -37,9 +40,12 @@ public class PostServiceImpl implements PostService {
   }
 
   @Override
-  public List<PostDto> getAll() {
-    List<Post> posts = postRepository.findAll();
-    return posts.stream().map(post -> entityToDTO(post)).collect(Collectors.toList());
+  public List<PostDto> getAll(int page, int count) {
+    Pageable pageable = PageRequest.of(page, count);
+    Page<Post> posts = postRepository.findAll(pageable);
+
+    List<Post> listPosts = posts.getContent();
+    return listPosts.stream().map(post -> entityToDTO(post)).collect(Collectors.toList());
   }
 
   @Override
