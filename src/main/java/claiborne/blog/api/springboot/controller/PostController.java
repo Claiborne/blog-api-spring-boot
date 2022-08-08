@@ -3,11 +3,10 @@ package claiborne.blog.api.springboot.controller;
 import claiborne.blog.api.springboot.payload.PostDto;
 import claiborne.blog.api.springboot.payload.PostResponse;
 import claiborne.blog.api.springboot.service.PostService;
+import claiborne.blog.api.springboot.utils.AppConfigs;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
 
 @RestController
 @RequestMapping("/api/posts")
@@ -29,10 +28,10 @@ public class PostController {
 
   @GetMapping
   public PostResponse getAllPosts(
-      @RequestParam(value = "page", defaultValue = "0", required = false) int page,
-      @RequestParam(value = "count", defaultValue = "10", required = false) int count,
-      @RequestParam(value = "sort", defaultValue = "id", required = false) String sort,
-      @RequestParam(value = "order", defaultValue = "asc", required = false) String order
+      @RequestParam(value = "page", defaultValue = AppConfigs.DEFAULT_PAGE_NUMBER, required = false) int page,
+      @RequestParam(value = "count", defaultValue = AppConfigs.DEFAULT_PAGE_SIZE, required = false) int count,
+      @RequestParam(value = "sort", defaultValue = AppConfigs.DEFAULT_SORT_BY, required = false) String sort,
+      @RequestParam(value = "order", defaultValue = AppConfigs.DEFAULT_SORT_ORDER, required = false) String order
   ) {
     return postService.getAll(page, count, sort, order);
   }
