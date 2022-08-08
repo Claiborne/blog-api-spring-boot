@@ -3,14 +3,18 @@ package claiborne.blog.api.springboot.service.impl;
 import claiborne.blog.api.springboot.entity.Post;
 import claiborne.blog.api.springboot.exception.ResourceNotFoundException;
 import claiborne.blog.api.springboot.payload.PostDto;
+import claiborne.blog.api.springboot.payload.PostResponse;
 import claiborne.blog.api.springboot.repository.PostRepository;
 import claiborne.blog.api.springboot.service.PostService;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
+import javax.swing.border.Border;
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
@@ -40,12 +44,28 @@ public class PostServiceImpl implements PostService {
   }
 
   @Override
-  public List<PostDto> getAll(int page, int count) {
-    Pageable pageable = PageRequest.of(page, count);
+  public PostResponse getAll(int page, int count, String sort, String order) {
+    Sort sortOrder = order.equalsIgnoreCase(Sort.Direction.DESC.name()) ? Sort.by(sort).descending()
+        : Sort.by(sort).ascending();
+
+    Pageable pageable = PageRequest.of(page, count, sortOrder);
+
+    // interface PagingAndSortingRepository<T, ID>
+    // Page<T> findAll(Pageable pageable)
     Page<Post> posts = postRepository.findAll(pageable);
 
     List<Post> listPosts = posts.getContent();
-    return listPosts.stream().map(post -> entityToDTO(post)).collect(Collectors.toList());
+    List<PostDto> content = listPosts.stream().map(post -> entityToDTO(post)).collect(Collectors.toList());
+
+    PostResponse postResponse = new PostResponse();
+    postResponse.setContent(content);
+    postResponse.setPage(posts.getNumber());
+    postResponse.setCount(posts.getSize());
+    postResponse.setTotalElements(posts.getTotalElements());
+    postResponse.setTotalPages(posts.getTotalPages());
+    postResponse.setLast(posts.isLast());
+
+    return postResponse;
   }
 
   @Override

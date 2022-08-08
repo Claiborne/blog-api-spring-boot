@@ -1,6 +1,7 @@
 package claiborne.blog.api.springboot.controller;
 
 import claiborne.blog.api.springboot.payload.PostDto;
+import claiborne.blog.api.springboot.payload.PostResponse;
 import claiborne.blog.api.springboot.service.PostService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -27,11 +28,13 @@ public class PostController {
   }
 
   @GetMapping
-  public List<PostDto> getAllPosts(
+  public PostResponse getAllPosts(
       @RequestParam(value = "page", defaultValue = "0", required = false) int page,
-      @RequestParam(value = "count", defaultValue = "10", required = false) int count
+      @RequestParam(value = "count", defaultValue = "10", required = false) int count,
+      @RequestParam(value = "sort", defaultValue = "id", required = false) String sort,
+      @RequestParam(value = "order", defaultValue = "asc", required = false) String order
   ) {
-    return postService.getAll(page, count);
+    return postService.getAll(page, count, sort, order);
   }
 
   @GetMapping("/{id}")
