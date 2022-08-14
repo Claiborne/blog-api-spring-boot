@@ -6,6 +6,7 @@ import claiborne.blog.api.springboot.payload.PostDto;
 import claiborne.blog.api.springboot.payload.PostResponse;
 import claiborne.blog.api.springboot.repository.PostRepository;
 import claiborne.blog.api.springboot.service.PostService;
+import org.modelmapper.ModelMapper;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -20,11 +21,13 @@ public class PostServiceImpl implements PostService {
 
   // constructor-based dependency injection
   private PostRepository postRepository;
+  private ModelMapper modelMapper;
 
   // we can omit @Autowired annotation because 1) we've registered as a bean (with @Service in this case),
   // and 2) only one constructor exists
-  public PostServiceImpl(PostRepository postRepository) {
+  public PostServiceImpl(PostRepository postRepository, ModelMapper modelMapper) {
     this.postRepository = postRepository;
+    this.modelMapper = modelMapper;
   }
 
   @Override
@@ -92,22 +95,11 @@ public class PostServiceImpl implements PostService {
 
   // convert Entity to DTO
   private PostDto entityToDTO(Post entity) {
-    PostDto dto = new PostDto();
-    dto.setId(entity.getId());
-    dto.setTitle(entity.getTitle());
-    dto.setDescription(entity.getDescription());
-    dto.setContent(entity.getContent());
-
-    return dto;
+    return modelMapper.map(entity, PostDto.class);
   }
 
   // convert DTO to Entity
   private Post dtoToEntity(PostDto dto) {
-    Post entity = new Post();
-    entity.setTitle(dto.getTitle());
-    entity.setDescription(dto.getDescription());
-    entity.setContent((dto.getContent()));
-
-    return entity;
+    return modelMapper.map(dto, Post.class);
   }
 }

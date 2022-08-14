@@ -1,9 +1,9 @@
 package claiborne.blog.api.springboot.payload;
 
 import lombok.Data;
-
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.Size;
+import java.util.Set;
 
 @Data
 public class PostDto {
@@ -21,4 +21,5 @@ public class PostDto {
   @NotEmpty
   @Size(min = 5, message = "Content should have at least 5 characters")
   private String content;
+  private Set<CommentDto> comments;
 }
