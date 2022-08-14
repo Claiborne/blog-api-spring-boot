@@ -8,9 +8,11 @@ import claiborne.blog.api.springboot.payload.CommentDto;
 import claiborne.blog.api.springboot.repository.CommentRepository;
 import claiborne.blog.api.springboot.repository.PostRepository;
 import claiborne.blog.api.springboot.service.CommentService;
+import org.modelmapper.ModelMapper;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import org.springframework.ui.ModelMap;
 
 import java.util.List;
 import java.util.Optional;
@@ -21,12 +23,16 @@ public class CommentServiceImpl implements CommentService {
   // constructor-based dependency injection
   private CommentRepository commentRepository;
   private PostRepository postRepository;
+  private ModelMapper modelMapper;
 
   // we can omit @Autowired annotation because 1) we've registered as a bean (with @Service in this case),
   // and 2) only one constructor exists
-  public CommentServiceImpl(CommentRepository commentRepository, PostRepository postRepository) {
+  public CommentServiceImpl(CommentRepository commentRepository, PostRepository postRepository,
+                            ModelMapper modelMapper) {
     this.commentRepository = commentRepository;
     this.postRepository = postRepository;
+    this.modelMapper = modelMapper;
+
   }
 
   @Override
@@ -93,21 +99,12 @@ public class CommentServiceImpl implements CommentService {
   }
 
   private CommentDto entityToDto(Comment entity) {
-    CommentDto dto = new CommentDto();
-    dto.setId(entity.getId());
-    dto.setName(entity.getName());
-    dto.setBody(entity.getBody());
-
-    return dto;
+    return modelMapper.map(entity, CommentDto.class);
   }
 
   private Comment dtoToEntity(CommentDto dto) {
-    Comment entity = new Comment();
-    entity.setId(dto.getId());
-    entity.setName(dto.getName());
-    entity.setBody(dto.getBody());
+    return modelMapper.map(dto, Comment.class);
 
-    return entity;
   }
 
 }
