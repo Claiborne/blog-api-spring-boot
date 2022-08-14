@@ -6,6 +6,7 @@ import claiborne.blog.api.springboot.service.PostService;
 import claiborne.blog.api.springboot.utils.AppConfigs;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
@@ -22,6 +23,7 @@ public class PostController {
     this.postService = postService;
   }
 
+  @PreAuthorize("hasRole('ROLE_ADMIN')")
   // @PostMapping impl has: @RequestMapping(method=RequestMethod.POST)
   @PostMapping
   public ResponseEntity<PostDto> createPost(@Valid @RequestBody PostDto postDto) {
