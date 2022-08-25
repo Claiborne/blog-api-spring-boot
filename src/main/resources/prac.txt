@@ -1,0 +1,2 @@
+Text in a file
+Second line

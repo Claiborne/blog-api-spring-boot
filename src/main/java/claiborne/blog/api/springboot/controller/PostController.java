@@ -26,7 +26,7 @@ public class PostController {
   }
 
   @ApiOperation(value = "Create a blog post")
-  //@PreAuthorize("hasRole('ROLE_ADMIN')")
+  // @PreAuthorize("hasRole('ROLE_ADMIN')")
   // @PostMapping impl has: @RequestMapping(method=RequestMethod.POST)
   @PostMapping
   public ResponseEntity<PostDto> createPost(@Valid @RequestBody PostDto postDto) {

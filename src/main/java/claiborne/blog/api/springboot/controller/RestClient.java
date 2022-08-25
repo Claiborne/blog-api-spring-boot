@@ -23,4 +23,7 @@ public class RestClient {
     return practiceService.get();
   }
 
+  @GetMapping("/display")
+  public StringBuilder display() { return practiceService.display(); }
+
 }
